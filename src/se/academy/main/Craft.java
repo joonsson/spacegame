@@ -22,10 +22,10 @@ public class Craft extends Sprite {
         x += dx;
         y += dy;
 
-        if (x < 1) {
+        if (x < 50) {
             x = 1;
         }
-        if (y < 1) {
+        if (y < 50) {
             y = 1;
         }
     }
@@ -39,20 +39,20 @@ public class Craft extends Sprite {
             fire();
         }
         if (key == KeyEvent.VK_LEFT) {
-            dx = -1;
+            dx = -10;
         }
         if (key == KeyEvent.VK_RIGHT) {
-            dx = 1;
+            dx = 10;
         }
         if (key == KeyEvent.VK_UP) {
-            dy = -1;
+            dy = -10;
         }
         if (key == KeyEvent.VK_DOWN) {
-            dy = 1;
+            dy = 10;
         }
     }
     public void fire() {
-        missiles.add(new Missile(x + width, y + height / 2));
+        missiles.add(new Missile(x + width, y + height / 2 - 10));
     }
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();

@@ -11,6 +11,7 @@ public class Board extends JPanel implements ActionListener {
     private Timer timer;
     private Craft craft;
     private ArrayList<Alien> aliens;
+    private ArrayList<Explosion> explosions;
     private boolean ingame;
     private final int ICRAFT_X = 40;
     private final int ICRAFT_Y = 60;
@@ -19,17 +20,17 @@ public class Board extends JPanel implements ActionListener {
     private final int DELAY = 15;
 
     private final int[][] pos = {
-            {2380, 682}, {2500, 59}, {1380, 89},
-            {780, 109}, {580, 139}, {680, 239},
-            {790, 568}, {760, 600}, {790, 150},
-            {980, 209}, {560, 45}, {510, 550},
-            {930, 420}, {590, 320}, {530, 640},
-            {940, 59}, {990, 500}, {920, 200},
-            {900, 259}, {660, 50}, {540, 380},
-            {810, 220}, {860, 400}, {740, 180},
-            {820, 128}, {490, 170}, {700, 30}
+            {2380, 682}, {2500, 59}, {13800, 89},
+            {1280, 109}, {8600, 139}, {6800, 239},
+            {1460, 568}, {7060, 600}, {7900, 150},
+            {4601, 209}, {5600, 45}, {5100, 550},
+            {5800, 420}, {5900, 320}, {5300, 640},
+            {1440, 240}, {9900, 500}, {9200, 200},
+            {1580, 259}, {6600, 50}, {5400, 380},
+            {2620, 220}, {8600, 400}, {7400, 180},
+            {1350, 128}, {4900, 170}, {7000, 30}
     };
-    public board() {
+    public Board() {
         initBoard();
     }
     private void initBoard() {
@@ -41,6 +42,7 @@ public class Board extends JPanel implements ActionListener {
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
         craft = new Craft(ICRAFT_X, ICRAFT_Y);
         initAliens();
+        initExplosions();
 
         timer = new Timer(DELAY, this);
         timer.start();
@@ -50,6 +52,9 @@ public class Board extends JPanel implements ActionListener {
         for (int[] p : pos) {
             aliens.add(new Alien(p[0], p[1]));
         }
+    }
+    public void initExplosions() {
+        explosions = new ArrayList<>();
     }
     @Override
     public void paintComponent(Graphics g) {
@@ -72,6 +77,16 @@ public class Board extends JPanel implements ActionListener {
                 g.drawImage(m.getImage(), m.getX(), m.getY(), this);
             }
         }
+        for (Alien a: aliens) {
+            if (a.isVisible()) {
+                g.drawImage(a.getImage(), a.getX(), a.getY(), this);
+            }
+        }
+        for (Explosion e: explosions) {
+            if (e.isVisible()) {
+                g.drawImage(e.getImage(),e.getX(),e.getY(),this);
+            }
+        }
         g.setColor(Color.WHITE);
         g.drawString("Aliens left: " + aliens.size(), 5, 15);
     }
@@ -91,6 +106,7 @@ public class Board extends JPanel implements ActionListener {
         updateCraft();
         updateMissiles();
         updateAliens();
+        updateExplosions();
 
         checkCollisions();
 
@@ -132,6 +148,20 @@ public class Board extends JPanel implements ActionListener {
             }
         }
     }
+    private void updateExplosions() {
+        for (Explosion e: explosions) {
+            Timer etimer = e.getTimer();
+            if (etimer.getDelay() > 500) {
+                e.loadImage("explosion2.png");
+            }
+            if (etimer.getDelay() > 1000) {
+                e.loadImage("explosion3.png");
+            }
+            if (etimer.getDelay() > 1500) {
+                e.setVisible(false);
+            }
+        }
+    }
     public void checkCollisions() {
         Rectangle r3 = craft.getBounds();
 
@@ -139,6 +169,7 @@ public class Board extends JPanel implements ActionListener {
             Rectangle r2 = alien.getBounds();
 
             if (r3.intersects(r2)) {
+                explosions.add(new Explosion(craft.getX(), craft.getY()));
                 craft.setVisible(false);
                 alien.setVisible(false);
                 ingame = false;
@@ -152,6 +183,7 @@ public class Board extends JPanel implements ActionListener {
                 Rectangle r2 = alien.getBounds();
 
                 if (r1.intersects(r2)) {
+                    explosions.add(new Explosion(alien.getX(), alien.getY()));
                     m.setVisible(false);
                     alien.setVisible(false);
                 }
