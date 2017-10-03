@@ -10,12 +10,14 @@ public class Application extends JFrame {
     }
 
     private void initUI() {
+
         add(new Board());
 
-        setSize(1280, 720);
+        setResizable(false);
+        pack();
 
         setTitle("Space Invaders");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }
