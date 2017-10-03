@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.*;
 
 public class Board extends JPanel implements ActionListener {
@@ -18,6 +19,7 @@ public class Board extends JPanel implements ActionListener {
     private final int B_WIDTH = 1280;
     private final int B_HEIGHT = 720;
     private final int DELAY = 15;
+    public int timetime = 0;
 
     private final int[][] pos = {
             {2380, 682}, {2500, 59}, {13800, 89},
@@ -147,18 +149,25 @@ public class Board extends JPanel implements ActionListener {
                 aliens.remove(i);
             }
         }
+        if (timetime > 10) {
+            createAlien();
+            timetime = 0;
+        } else {
+            timetime++;
+        }
     }
     private void updateExplosions() {
-        for (Explosion e: explosions) {
-            Timer etimer = e.getTimer();
-            if (etimer.getDelay() > 500) {
+        for (int i = 0; i < explosions.size(); i++) {
+            Explosion e = explosions.get(i);
+            if (e.getN() > 1) {
                 e.loadImage("explosion2.png");
             }
-            if (etimer.getDelay() > 1000) {
+            if (e.getN() > 2) {
                 e.loadImage("explosion3.png");
             }
-            if (etimer.getDelay() > 1500) {
+            if (e.getN() > 3) {
                 e.setVisible(false);
+                explosions.remove(i);
             }
         }
     }
@@ -189,6 +198,17 @@ public class Board extends JPanel implements ActionListener {
                 }
             }
         }
+    }
+    private void createAlien() {
+        Random rand = new Random();
+        int r = rand.nextInt(720);
+        if (r < 50) {
+            r = 50;
+        }
+        if (r > 680) {
+            r = 680;
+        }
+        aliens.add(new Alien(Alien.INITIAL_X, r));
     }
     private class TAdapter extends KeyAdapter {
         @Override

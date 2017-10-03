@@ -1,10 +1,8 @@
 package se.academy.main;
 
 
-import javax.swing.*;
-
 public class Explosion extends Sprite{
-    private Timer timer = new Timer();
+    private int n;
     public Explosion(int x, int y) {
         super(x, y);
 
@@ -13,9 +11,12 @@ public class Explosion extends Sprite{
     private void initExplosion() {
         loadImage("explosion1.png");
         getImageDimensions();
-        timer.start();
+        n = 0;
     }
-    public Timer getTimer() {
-        return timer;
+    public int getN() {
+        return n;
+    }
+    public void increaseN() {
+        n++;
     }
 }

@@ -1,7 +1,9 @@
 package se.academy.main;
 
+import java.util.Random;
+
 public class Alien extends Sprite {
-    private final int INITIAL_X = 1280;
+    public static final int INITIAL_X = 2000;
 
     public Alien(int x, int y) {
         super(x, y);
